@@ -1,6 +1,25 @@
 version: '3.9'
 
 services:
+  backend:
+    container_name: admin-django
+    build: 
+      context: ./adminbackend
+      dockerfile: Dockerfile
+    command: gunicorn adminboard.wsgi --bind 0.0.0.0:8000
+    volumes:
+      - ./adminbackend/:/adminbackend
+      - static-volume:/adminbackend/.static_root
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    depends_on:
+      - sql
+
   sql:
     container_name: admin-sql
     image: mysql
@@ -21,23 +40,6 @@ services:
     volumes:
       - .sqlVolume:/var/lib/mysql
 
-  backend:
-    container_name: admin-django
-    build: 
-      context: ./admindata
-      dockerfile: Dockerfile
-    command: gunicorn admindash.wsgi --bind 0.0.0.0:8000
-    volumes:
-      - ./admindata/:/admindata
-      - static-volume:/admindata/django_static
-    env_file:
-      - ./.env
-    ports:
-      - "8000:8000"
-    environment:
-      - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-
   ngnix:
     build: 
       context: ./nginx
@@ -47,7 +49,7 @@ services:
       - "8080:8080"
     volumes:
       - ./nginx/nginx-setup.conf:/etc/nginx/con.f/nginx-setup.conf
-      - static-volume:/admindata/django_static
+      - static-volume:/adminbackend/.static_root/
 
     depends_on:
       - backend
