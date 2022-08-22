@@ -13,4 +13,4 @@ RUN pip install -r requirements.txt
 COPY . /adminbackend/
 
 # static file 
-# RUN python manage.py collectstatic  --no-input
+RUN python manage.py collectstatic  --no-input
