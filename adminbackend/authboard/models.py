@@ -73,6 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStepField):
     
     # 필드 변경 및 적용 
     objects = UserManage()
+    
     USERNAME_FIELD: str = "email"
     EMAIL_FIELD: str = "email"
     REQUIRED_FIELDS: List[str] = ["name", "password", "birth_day"]
