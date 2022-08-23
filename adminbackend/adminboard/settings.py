@@ -26,6 +26,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET')
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+AUTH_USER_MODEL = 'authboard.User'
 CSRF_TRUSTED_ORIGINS = ['http://0.0.0.0:8080']
 
 # Application definition
@@ -76,8 +77,12 @@ WSGI_APPLICATION = 'adminboard.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('DB_DATABASE'),
+        'USER': os.getenv('DB_USERNAME'),
+        'PASSWORD': os.getenv('DB_ROOT_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT')
     }
 }
 
