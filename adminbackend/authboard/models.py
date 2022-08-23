@@ -35,7 +35,7 @@ class TimeStepField(models.Model):
     updated_at = models.DateTimeField(auto_now=True)   
     
     class Meta:
-        abstract = True 
+        abstract: bool = True 
 
 
 class User(AbstractBaseUser, PermissionsMixin, TimeStepField):
