@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 import os
+import socket
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,6 +30,19 @@ ALLOWED_HOSTS = ["*"]
 AUTH_USER_MODEL = 'authboard.User'
 CSRF_TRUSTED_ORIGINS = ['http://0.0.0.0:8080']
 
+# debug setting
+INTERNAL_IPS = [
+    '127.0.0.1'
+]
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
+
+def show_toolbar(request):
+    return True
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK' : show_toolbar    
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,6 +52,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # 서드파티
+    'debug_toolbar',
+    
+    # 앱
     'authboard.apps.AuthboardConfig',
 ]
 
@@ -49,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'adminboard.urls'
